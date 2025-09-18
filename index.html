@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Paro AI | Class 12 Study Hub</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* --- CSS Variables --- */
+        :root {
+            --font-main: 'Inter', sans-serif;
+            
+            /* Light Theme */
+            --bg-light: #f4f7f8;
+            --text-light: #121212;
+            --card-bg-light: #ffffff;
+            --primary-light: #007bff;
+            --primary-darken-light: #0056b3;
+            --accent-light: #e9f5ff;
+            --shadow-light: rgba(0, 0, 0, 0.08);
+            --border-light: #dee2e6;
+            --user-msg-light: #007bff;
+            --user-text-light: #ffffff;
+            --google-red: #DB4437;
+            --youtube-red: #FF0000;
+
+            /* Dark Theme */
+            --bg-dark: #121212;
+            --text-dark: #e0e0e0;
+            --card-bg-dark: #1e1e1e;
+            --primary-dark: #4dabf7;
+            --primary-darken-dark: #2196f3;
+            --accent-dark: #2a2a2a;
+            --shadow-dark: rgba(0, 0, 0, 0.25);
+            --border-dark: #3a3a3a;
+            --user-msg-dark: #4dabf7;
+            --user-text-dark: #121212;
+        }
+
+        /* --- Base Styles --- */
+        body {
+            font-family: var(--font-main);
+            margin: 0;
+            background-color: var(--bg-light);
+            color: var(--text-light);
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        body.dark-mode {
+            background-color: var(--bg-dark);
+            color: var(--text-dark);
+        }
+
+        /* --- Header --- */
+        header {
+            background: var(--card-bg-light);
+            box-shadow: 0 2px 4px var(--shadow-light);
+            padding: 15px 5%;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        body.dark-mode header {
+            background: var(--card-bg-dark);
+            box-shadow: 0 2px 4px var(--shadow-dark);
+        }
+
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .logo-title {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .header-logo {
+            height: 50px;
+            width: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        header h1 {
+            font-size: 1.5em;
+            margin: 0;
+            font-weight: 600;
+        }
+
+        #theme-toggle {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-light);
+            transition: transform 0.3s ease;
+        }
+
+        body.dark-mode #theme-toggle {
+            color: var(--text-dark);
+        }
+
+        #theme-toggle:hover {
+            transform: scale(1.1) rotate(15deg);
+        }
+
+        /* --- Main Content --- */
+        .main-content {
+            padding: 30px 5%;
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            gap: 40px;
+        }
+
+        section {
+            background-color: var(--card-bg-light);
+            padding: 25px;
+            border-radius: 16px;
+            box-shadow: 0 4px 12px var(--shadow-light);
+        }
+
+        body.dark-mode section {
+            background-color: var(--card-bg-dark);
+            box-shadow: 0 4px 12px var(--shadow-dark);
+        }
+
+        h2 {
+            font-size: 1.8em;
+            margin-top: 0;
+            color: var(--primary-light);
+            border-bottom: 2px solid var(--accent-light);
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        body.dark-mode h2 {
+            color: var(--primary-dark);
+            border-bottom-color: var(--accent-dark);
+        }
+
+        /* --- Search & MCQ Generator --- */
+        .search-container {
+            text-align: center;
+        }
+
+        .search-input-group {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .search-box {
+            flex-grow: 1;
+            min-width: 300px;
+            border: 1px solid var(--border-light);
+            padding: 15px 25px;
+            font-size: 1em;
+            outline: none;
+            border-radius: 50px;
+            background-color: var(--card-bg-light);
+            color: var(--text-light);
+        }
+
+        body.dark-mode .search-box {
+             border-color: var(--border-dark);
+             background-color: var(--card-bg-dark);
+             color: var(--text-dark);
+        }
+
+        .search-btn, .external-search-btn {
+            color: #fff;
+            border: none;
+            padding: 15px 25px;
+            cursor: pointer;
+            font-size: 1em;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+        
+        .search-btn:hover, .external-search-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .search-btn {
+            background-color: var(--primary-light);
+        }
+        .search-btn:hover {
+            background-color: var(--primary-darken-light);
+        }
+
+        body.dark-mode .search-btn {
+            background-color: var(--primary-dark);
+        }
+        body.dark-mode .search-btn:hover {
+            background-color: var(--primary-darken-dark);
+        }
+        
+        #google-search-btn { background-color: var(--google-red); }
+        #youtube-search-btn { background-color: var(--youtube-red); }
+
+
+        /* --- Subject Grid --- */
+        .subject-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 20px;
+            padding: 0;
+            background: none;
+            box-shadow: none;
+        }
+
+        .subject-link {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .subject-card {
+            background-color: var(--accent-light);
+            border-radius: 12px;
+            padding: 30px 20px;
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 1px solid transparent;
+        }
+
+        .subject-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 8px 20px var(--shadow-light);
+            background-color: var(--primary-light);
+            color: #fff;
+        }
+
+        body.dark-mode .subject-card {
+            background-color: var(--accent-dark);
+        }
+
+        body.dark-mode .subject-card:hover {
+            background-color: var(--primary-dark);
+            color: var(--bg-dark);
+            box-shadow: 0 8px 20px var(--shadow-dark);
+        }
+
+        .subject-card h3 {
+            margin: 0;
+            font-size: 1.2em;
+        }
+
+        /* --- MCQ Display Section --- */
+        .back-btn {
+            background-color: #6c757d;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            margin-bottom: 20px;
+            transition: background-color 0.3s ease;
+        }
+
+        .back-btn:hover {
+            background-color: #5a6268;
+        }
+
+        .mcq-question {
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        body.dark-mode .mcq-question {
+            border-bottom-color: var(--border-dark);
+        }
+
+        .mcq-question p {
+            font-weight: 600;
+            font-size: 1.1em;
+        }
+
+        .mcq-options {
+            list-style: none;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .mcq-options li {
+            background-color: var(--accent-light);
+            padding: 12px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.2s ease, transform 0.2s ease;
+            border: 1px solid var(--border-light);
+        }
+
+        body.dark-mode .mcq-options li {
+            background-color: var(--accent-dark);
+            border-color: var(--border-dark);
+        }
+
+        .mcq-options li:hover {
+            transform: scale(1.02);
+            background-color: var(--primary-light);
+            color: #fff;
+            border-color: var(--primary-light);
+        }
+
+        body.dark-mode .mcq-options li:hover {
+            background-color: var(--primary-dark);
+            color: var(--bg-dark);
+            border-color: var(--primary-dark);
+        }
+
+        .mcq-options li.correct {
+            background-color: #d4edda;
+            color: #155724;
+            border-color: #c3e6cb;
+            font-weight: bold;
+        }
+
+        .mcq-options li.incorrect {
+            background-color: #f8d7da;
+            color: #721c24;
+            border-color: #f5c6cb;
+            font-weight: bold;
+        }
+
+        /* --- AI Tutor --- */
+        .ai-tutor-section {
+            display: flex;
+            flex-direction: column;
+            min-height: 60vh;
+        }
+
+        .chat-container {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding: 15px;
+            border: 1px solid var(--border-light);
+            border-radius: 12px;
+            margin-bottom: 15px;
+            background-color: var(--bg-light);
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        body.dark-mode .chat-container {
+            border-color: var(--border-dark);
+            background-color: var(--bg-dark);
+        }
+
+        .message {
+            padding: 10px 15px;
+            border-radius: 18px;
+            max-width: 80%;
+            line-height: 1.5;
+        }
+
+        .ai-tutor-message {
+            background-color: var(--accent-light);
+            align-self: flex-start;
+            border-bottom-left-radius: 4px;
+        }
+
+        body.dark-mode .ai-tutor-message {
+            background-color: var(--accent-dark);
+        }
+
+        .user-message {
+            background-color: var(--user-msg-light);
+            color: var(--user-text-light);
+            align-self: flex-end;
+            border-bottom-right-radius: 4px;
+        }
+
+        body.dark-mode .user-message {
+            background-color: var(--user-msg-dark);
+            color: var(--user-text-dark);
+        }
+
+        .chat-input-area {
+            display: flex;
+            gap: 10px;
+        }
+
+        #user-input {
+            flex-grow: 1;
+            padding: 12px 20px;
+            border: 1px solid var(--border-light);
+            border-radius: 25px;
+            font-family: var(--font-main);
+            background-color: var(--card-bg-light);
+            color: var(--text-light);
+        }
+
+        body.dark-mode #user-input {
+            background-color: var(--card-bg-dark);
+            color: var(--text-dark);
+            border-color: var(--border-dark);
+        }
+
+        #send-btn {
+            background-color: var(--primary-light);
+            color: #fff;
+            border: none;
+            border-radius: 25px;
+            padding: 0 25px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background-color 0.3s ease;
+        }
+
+        #send-btn:hover {
+            background-color: var(--primary-darken-light);
+        }
+
+        body.dark-mode #send-btn {
+            background-color: var(--primary-dark);
+        }
+
+        body.dark-mode #send-btn:hover {
+            background-color: var(--primary-darken-dark);
+        }
+
+        /* --- Loader Animation --- */
+        .loader {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid var(--primary-light);
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+
+        body.dark-mode .loader {
+            border-top-color: var(--primary-dark);
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* --- Media Queries for Responsiveness --- */
+        @media (max-width: 768px) {
+            header h1 { font-size: 2.2em; }
+            .header-logo { height: 100px; width: 100px; }
+            h2 { font-size: 1.5em; }
+            .search-input-group { flex-direction: column; }
+            .search-box { min-width: unset; width: 100%; box-sizing: border-box;}
+            .search-btn, .external-search-btn { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="header-container">
+            <div class="logo-title">
+                <img src="LOGO.jpg" alt="Paro AI Logo" class="header-logo">
+                <h1>Class 12 Study with Paro AI</h1>
+            </div>
+            <button id="theme-toggle" aria-label="Toggle theme">☀️</button>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <!-- Section for MCQ generation and External Search -->
+        <section id="mcq-generator-section">
+            <h2>Learn Any Topic</h2>
+            <div class="search-container">
+                <div class="search-input-group">
+                    <input type="text" id="search-box" class="search-box" placeholder="Enter a topic for MCQs,Google,YouTube (e.g., 'Capacitance')">
+                    <button id="search-btn" class="search-btn">Generate MCQs</button>
+                    <button id="google-search-btn" class="external-search-btn">Search Google</button>
+                    <button id="youtube-search-btn" class="external-search-btn">Search YouTube</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section for subject grid -->
+        <section id="main-content-section" class="subject-grid">
+            <!-- Science Stream -->
+            <a href="physics.html" class="subject-link"><article class="subject-card"><h3>Physics</h3></article></a>
+            <a href="chemistry.html" class="subject-link"><article class="subject-card"><h3>Chemistry</h3></article></a>
+            <a href="biology.html" class="subject-link"><article class="subject-card"><h3>Biology</h3></article></a>
+            <a href="mathematics.html" class="subject-link"><article class="subject-card"><h3>Mathematics</h3></article></a>
+            <a href="computerscience.html" class="subject-link"><article class="subject-card"><h3>Computer Science</h3></article></a>
+            <a href="english.html" class="subject-link"><article class="subject-card"><h3>English</h3></article></a>
+              <!-- Arts Stream -->
+            <a href="history.html" class="subject-link"><article class="subject-card"><h3>History</h3></article></a>
+            <a href="political-science.html" class="subject-link"><article class="subject-card"><h3>Political Science</h3></article></a>
+            <a href="geography.html" class="subject-link"><article class="subject-card"><h3>Geography</h3></article></a>
+            <a href="sociology.html" class="subject-link"><article class="subject-card"><h3>Sociology</h3></article></a>
+            <a href="hindi.html" class="subject-link"><article class="subject-card"><h3>Hindi</h3></article></a>
+            <a href="it.html" class="subject-link"><article class="subject-card"><h3>IT</h3></article></a>
+            <a href="Exam-mode.html" class="subject-link"><article class="subject-card"><h3>Exam Mode</h3></article></a>
+            <a href="fine-arts.html" class="subject-link"><article class="subject-card"><h3>Fine Arts</h3></article></a>
+        </section>
+        
+        <!-- Section for displaying MCQs -->
+        <section id="mcq-section" style="display:none;">
+            <button id="back-btn" class="back-btn">&larr; Back to Subjects</button>
+            <h2 id="mcq-topic-title"></h2>
+            <div id="mcq-loader" class="loader" style="display:none;"></div>
+            <div id="mcq-container"></div>
+        </section>
+
+        <!-- AI Tutor Section -->
+        <section class="ai-tutor-section">
+            <h2>Paro AI Tutor</h2>
+            <div id="chat-container" class="chat-container">
+                <div class="message ai-tutor-message">
+                    Hello! I'm Paro AI, created by Dharminder Sharma. What topic would you like to understand better?
+                </div>
+            </div>
+            <div class="chat-input-area">
+                <input type="text" id="user-input" placeholder="Ask me anything...">
+                <button id="send-btn">Send</button>
+            </div>
+        </section>
+    </main>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- Element References ---
+            const searchBox = document.getElementById('search-box');
+            const searchBtn = document.getElementById('search-btn');
+            const googleSearchBtn = document.getElementById('google-search-btn');
+            const youtubeSearchBtn = document.getElementById('youtube-search-btn');
+            const mainContentSection = document.getElementById('main-content-section');
+            const mcqSection = document.getElementById('mcq-section');
+            const mcqContainer = document.getElementById('mcq-container');
+            const mcqLoader = document.getElementById('mcq-loader');
+            const backBtn = document.getElementById('back-btn');
+            const mcqTopicTitle = document.getElementById('mcq-topic-title');
+            const themeToggleBtn = document.getElementById('theme-toggle');
+            const body = document.body;
+            const chatContainer = document.getElementById('chat-container');
+            const userInput = document.getElementById('user-input');
+            const sendBtn = document.getElementById('send-btn');
+            
+            const apiKey = 'AIzaSyBaAvfHfq06XKgj6duX0VATo8y58tEWuWc'; // IMPORTANT: Replace with your actual Gemini API key
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${apiKey}`;
+
+            // --- Theme Toggle Logic ---
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark') {
+                body.classList.add('dark-mode');
+                themeToggleBtn.textContent = '🌙';
+            } else {
+                body.classList.remove('dark-mode');
+                themeToggleBtn.textContent = '☀️';
+            }
+
+            themeToggleBtn.addEventListener('click', () => {
+                body.classList.toggle('dark-mode');
+                if (body.classList.contains('dark-mode')) {
+                    themeToggleBtn.textContent = '🌙';
+                    localStorage.setItem('theme', 'dark');
+                } else {
+                    themeToggleBtn.textContent = '☀️';
+                    localStorage.setItem('theme', 'light');
+                }
+            });
+
+            // --- Page Navigation ---
+            function showMainContent() {
+                mainContentSection.style.display = 'grid';
+                mcqSection.style.display = 'none';
+                searchBox.value = '';
+                mcqContainer.innerHTML = '';
+            }
+            backBtn.addEventListener('click', showMainContent);
+
+            // --- Search Functionality ---
+            function performSearch() {
+                const query = searchBox.value.trim();
+                if (query) {
+                    generateAndDisplayMCQs(query);
+                }
+            }
+            
+            // Event Listeners for search buttons
+            searchBtn.addEventListener('click', performSearch);
+
+            googleSearchBtn.addEventListener('click', () => {
+                const query = searchBox.value.trim();
+                if (query) {
+                    const googleUrl = `https://www.google.com/search?q=${encodeURIComponent(query)}`;
+                    window.open(googleUrl, '_blank');
+                }
+            });
+
+            youtubeSearchBtn.addEventListener('click', () => {
+                const query = searchBox.value.trim();
+                if (query) {
+                    const youtubeUrl = `https://www.youtube.com/results?search_query=${encodeURIComponent(query)}`;
+                    window.open(youtubeUrl, '_blank');
+                }
+            });
+
+            searchBox.addEventListener('keydown', (event) => {
+                if (event.key === 'Enter') {
+                    event.preventDefault();
+                    performSearch(); // Default action on Enter is to generate MCQs
+                }
+            });
+
+            // --- AI Tutor Chat ---
+            function displayMessage(content, sender) {
+                const messageDiv = document.createElement('div');
+                messageDiv.classList.add('message', sender === 'user' ? 'user-message' : 'ai-tutor-message');
+                messageDiv.innerHTML = content; // Using innerHTML to render bold tags
+                chatContainer.appendChild(messageDiv);
+                chatContainer.scrollTop = chatContainer.scrollHeight;
+            }
+
+            function showLoading(container) {
+                const loadingDiv = document.createElement('div');
+                loadingDiv.className = 'loader';
+                loadingDiv.id = 'chat-loader';
+                container.appendChild(loadingDiv);
+                container.scrollTop = container.scrollHeight;
+            }
+
+            function hideLoading(id = 'chat-loader') {
+                const loader = document.getElementById(id);
+                if (loader) loader.remove();
+            }
+
+            async function generateContent(prompt, config = {}) {
+                try {
+                    const payload = {
+                        contents: [{ role: 'user', parts: [{ text: prompt }] }],
+                        ...config
+                    };
+                    const response = await fetch(apiUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+                    if (!response.ok) {
+                        throw new Error(`API error: ${response.status}`);
+                    }
+                    return await response.json();
+                } catch (error) {
+                    console.error('Error fetching from Gemini API:', error);
+                    return { error: 'Sorry, an error occurred. Please try again.' };
+                }
+            }
+
+            async function handleUserInput() {
+                const userMessage = userInput.value.trim();
+                if (!userMessage) return;
+
+                displayMessage(userMessage, 'user');
+                userInput.value = '';
+                showLoading(chatContainer);
+
+                const tutorPrompt = `Act as a knowledgeable tutor. The user asked: "${userMessage}". Provide a concise, helpful answer to teach the concept clearly for a student. Use an example if it helps. Keep the response under 100 words.`;
+                
+                const geminiResponse = await generateContent(tutorPrompt);
+                hideLoading('chat-loader');
+
+                const text = geminiResponse?.candidates?.[0]?.content?.parts?.[0]?.text || 'Sorry, I could not generate a response.';
+                const formattedText = text.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>'); // Bold markdown to HTML
+                displayMessage(formattedText, 'ai');
+            }
+
+            sendBtn.addEventListener('click', handleUserInput);
+            userInput.addEventListener('keydown', (event) => {
+                if (event.key === 'Enter') {
+                    event.preventDefault();
+                    handleUserInput();
+                }
+            });
+
+            // --- MCQ Generation Logic ---
+            async function generateAndDisplayMCQs(topic) {
+                mainContentSection.style.display = 'none';
+                mcqSection.style.display = 'block';
+                mcqTopicTitle.textContent = `MCQs on "${topic}"`;
+                mcqContainer.innerHTML = '';
+                mcqLoader.style.display = 'block';
+
+                const mcqPrompt = `Generate 19 multiple-choice questions about the topic: "${topic}". The response must be a valid JSON array of objects. Each object needs three properties: "question" (string), "options" (an array of exactly 4 strings), and "answer" (a string that exactly matches one of the options).`;
+                
+                const generationConfig = {
+                    generationConfig: {
+                        response_mime_type: 'application/json',
+                    }
+                };
+
+                const result = await generateContent(mcqPrompt, generationConfig);
+                mcqLoader.style.display = 'none';
+
+                if (result.error) {
+                    mcqContainer.innerHTML = `<p style="color:red; text-align:center;">${result.error}</p>`;
+                    return;
+                }
+
+                try {
+                    const jsonString = result.candidates?.[0]?.content?.parts?.[0]?.text;
+                    if (!jsonString) throw new Error("No content received from AI.");
+                    
+                    const mcqs = JSON.parse(jsonString);
+
+                    mcqs.forEach((mcq, index) => {
+                        const questionDiv = document.createElement('div');
+                        questionDiv.className = 'mcq-question';
+                        questionDiv.innerHTML = `<p>${index + 1}. ${mcq.question}</p>`;
+
+                        const optionsList = document.createElement('ul');
+                        optionsList.className = 'mcq-options';
+
+                        mcq.options.forEach(option => {
+                            const optionItem = document.createElement('li');
+                            optionItem.textContent = option;
+                            optionItem.addEventListener('click', () => checkAnswer(optionItem, mcq.answer, optionsList));
+                            optionsList.appendChild(optionItem);
+                        });
+
+                        questionDiv.appendChild(optionsList);
+                        mcqContainer.appendChild(questionDiv);
+                    });
+                } catch (parseError) {
+                    console.error('Failed to parse JSON:', parseError);
+                    mcqContainer.innerHTML = `<p style="color:red; text-align:center;">Failed to generate valid MCQs. Please try a different topic.</p>`;
+                }
+            }
+
+            function checkAnswer(selectedOption, correctAnswer, optionsList) {
+                optionsList.querySelectorAll('li').forEach(li => {
+                    li.style.pointerEvents = 'none';
+                    if (li.textContent === correctAnswer) {
+                        li.classList.add('correct');
+                    }
+                });
+                if (selectedOption.textContent !== correctAnswer) {
+                    selectedOption.classList.add('incorrect');
+                }
+            }
+        });
+    </script>
+</body>
+</html>

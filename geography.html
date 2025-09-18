@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Geography With PARO AI</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* --- CSS Variables --- */
+        :root {
+            --font-main: 'Inter', sans-serif;
+            --bg-light: #f4f7f9; --text-light: #121212; --card-bg-light: #ffffff;
+            --primary-light: #007bff; --primary-darken-light: #0056b3; --accent-light: #e9f5ff; 
+            --shadow-light: rgba(0, 0, 0, 0.08); --border-light: #dee2e6; --user-msg-light: #007bff; 
+            --user-text-light: #ffffff; --success-light: #28a745; --info-light: #17a2b8; 
+            --warning-light: #ffc107; --google-blue: #4285F4; --youtube-red: #FF0000;
+
+            --bg-dark: #121212; --text-dark: #e0e0e0; --card-bg-dark: #1e1e1e;
+            --primary-dark: #4dabf7; --primary-darken-dark: #2196f3; --accent-dark: #2a2a2a; 
+            --shadow-dark: rgba(0, 0, 0, 0.25); --border-dark: #3a3a3a; --user-msg-dark: #4dabf7; 
+            --user-text-dark: #121212; --success-dark: #58c063; --info-dark: #37c2d8; --warning-dark: #ffca2c;
+        }
+
+        /* --- Base Styles --- */
+        body { font-family: var(--font-main); margin: 0; background-color: var(--bg-light); color: var(--text-light); transition: background-color 0.3s ease, color 0.3s ease; }
+        body.dark-mode { background-color: var(--bg-dark); color: var(--text-dark); }
+
+        /* --- Header --- */
+        header { background: var(--card-bg-light); box-shadow: 0 2px 4px var(--shadow-light); padding: 15px 5%; position: sticky; top: 0; z-index: 1000; }
+        body.dark-mode header { background: var(--card-bg-dark); box-shadow: 0 2px 4px var(--shadow-dark); }
+        .header-container { display: flex; justify-content: space-between; align-items: center; max-width: 1200px; margin: 0 auto; }
+        .header-left { display: flex; align-items: center; gap: 20px; }
+        .header-nav a { color: var(--text-light); text-decoration: none; font-size: 2.5rem; font-weight: bold; transition: transform 0.2s; }
+        .header-nav a:hover { transform: scale(1.1); }
+        body.dark-mode .header-nav a { color: var(--text-dark); }
+        .header-logo { height: 100px; width: 100px; border-radius: 50%; object-fit: cover; }
+        header h1 { font-size: 1.8em; margin: 0; font-weight: 600; }
+        #theme-toggle { background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--text-light); transition: transform 0.3s ease; }
+        body.dark-mode #theme-toggle { color: var(--text-dark); }
+        #theme-toggle:hover { transform: scale(1.1) rotate(15deg); }
+
+        /* --- Main Content --- */
+        .main-content { padding: 30px 5%; max-width: 1200px; margin: 0 auto; display: grid; gap: 40px; }
+        section { background-color: var(--card-bg-light); padding: 25px; border-radius: 16px; box-shadow: 0 4px 12px var(--shadow-light); }
+        body.dark-mode section { background-color: var(--card-bg-dark); box-shadow: 0 4px 12px var(--shadow-dark); }
+        h2, .chapter-category { font-size: 1.8em; margin-top: 0; color: var(--primary-light); border-bottom: 2px solid var(--accent-light); padding-bottom: 10px; margin-bottom: 20px; }
+        body.dark-mode h2, body.dark-mode .chapter-category { color: var(--primary-dark); border-bottom-color: var(--accent-dark); }
+        
+        /* --- Search & Notes --- */
+        #chapter-search { width: 100%; padding: 15px 25px; font-size: 1em; border-radius: 50px; border: 1px solid var(--border-light); background-color: var(--card-bg-light); color: var(--text-light); box-sizing: border-box; margin-bottom: 10px; }
+        .notes-container { display: flex; gap: 10px; margin-bottom: 20px; }
+        .all-notes-btn { flex: 1; display: block; padding: 15px; background-color: var(--primary-light); color: #fff; text-align: center; text-decoration: none; font-weight: 600; border-radius: 50px; transition: background-color 0.3s; }
+        .all-notes-btn:hover { background-color: var(--primary-darken-light); }
+        body.dark-mode #chapter-search { background-color: var(--card-bg-dark); color: var(--text-dark); border-color: var(--border-dark); }
+        body.dark-mode .all-notes-btn { background-color: var(--primary-dark); }
+        body.dark-mode .all-notes-btn:hover { background-color: var(--primary-darken-dark); }
+
+        /* --- Chapter Grid --- */
+        .chapter-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
+        .chapter-card { background-color: var(--accent-light); border-radius: 12px; padding: 20px; display: flex; flex-direction: column; gap: 15px; transition: transform 0.3s ease, box-shadow 0.3s ease; }
+        body.dark-mode .chapter-card { background-color: var(--accent-dark); }
+        .chapter-card:hover { transform: translateY(-5px); box-shadow: 0 8px 20px var(--shadow-light); }
+        body.dark-mode .chapter-card:hover { box-shadow: 0 8px 20px var(--shadow-dark); }
+        .chapter-card h3 { margin: 0; font-size: 1.2em; text-align: center; }
+
+        .button-group { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .card-btn { color: #fff; border: none; padding: 10px 15px; cursor: pointer; font-size: 0.9em; border-radius: 25px; font-weight: 600; text-align: center; text-decoration: none; transition: opacity 0.3s ease; }
+        .card-btn:hover { opacity: 0.85; }
+        .generate-mcq-btn { grid-column: 1 / -1; background-color: var(--success-light); }
+        .view-ncert-btn { background-color: var(--warning-light); color: #000; grid-column: 1 / -1; }
+        .google-search-btn { background-color: var(--google-blue); }
+        .youtube-search-btn { background-color: var(--youtube-red); }
+        body.dark-mode .generate-mcq-btn { background-color: var(--success-dark); }
+        body.dark-mode .view-ncert-btn { background-color: var(--warning-dark); }
+
+        /* --- MCQ & AI Tutor Styles --- */
+        .back-btn, #send-btn { background-color: var(--primary-light); color: #fff; border: none; padding: 10px 20px; border-radius: 25px; cursor: pointer; font-weight: 600; transition: background-color 0.3s ease; }
+        .mcq-question { margin-bottom: 25px; padding-bottom: 15px; border-bottom: 1px solid var(--border-light); }
+        .mcq-options { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 10px; }
+        .mcq-options li { background-color: var(--accent-light); padding: 12px 15px; border-radius: 8px; cursor: pointer; transition: background-color 0.2s ease, transform 0.2s ease; border: 1px solid var(--border-light); }
+        .mcq-options li.correct { background-color: #d4edda; color: #155724; border-color: #c3e6cb; font-weight: bold; }
+        .mcq-options li.incorrect { background-color: #f8d7da; color: #721c24; border-color: #f5c6cb; font-weight: bold; }
+        .ai-tutor-section { display: flex; flex-direction: column; min-height: 60vh; }
+        .chat-container { flex-grow: 1; overflow-y: auto; padding: 15px; border: 1px solid var(--border-light); border-radius: 12px; margin-bottom: 15px; background-color: var(--bg-light); display: flex; flex-direction: column; gap: 12px; }
+        .message { padding: 10px 15px; border-radius: 18px; max-width: 80%; line-height: 1.5; }
+        .ai-tutor-message { background-color: var(--accent-light); align-self: flex-start; border-bottom-left-radius: 4px; }
+        .user-message { background-color: var(--user-msg-light); color: var(--user-text-light); align-self: flex-end; border-bottom-right-radius: 4px; }
+        .chat-input-area { display: flex; gap: 10px; }
+        #user-input { flex-grow: 1; padding: 12px 20px; border: 1px solid var(--border-light); border-radius: 25px; font-family: var(--font-main); background-color: var(--card-bg-light); color: var(--text-light); }
+        .loader { border: 4px solid #f3f3f3; border-top: 4px solid var(--primary-light); border-radius: 50%; width: 30px; height: 30px; animation: spin 1s linear infinite; margin: 20px auto; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="header-container">
+            <div class="header-left">
+                <div class="header-nav"><a href="index.html" aria-label="Back to Home">‹</a></div>
+                <img src="LOGO.jpg" alt="Paro AI Logo" class="header-logo">
+                <h1>Geography With PARO AI</h1>
+            </div>
+            <button id="theme-toggle" aria-label="Toggle theme">☀️</button>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <!-- Chapters Section -->
+        <section id="main-content-section">
+            <input type="text" id="chapter-search" placeholder="Search for a chapter or topic...">
+            <div class="notes-container">
+                 <a href="https://www.eklavyastudypoint.com/p/geography-chapter-wise-pdf.html" target="_blank" class="all-notes-btn">View Notes (Eklavya)</a>
+                 <a href="https://edustud.nic.in/edu/SupportMaterial202425/12/Class12_Geography_HM_optimize.pdf" target="_blank" class="all-notes-btn">View Notes (EduStud)</a>
+            </div>
+            
+            <h2 class="chapter-category">Book 1: Fundamentals of Human Geography (मानव भूगोल के मूल सिद्धांत)</h2>
+            <div class="chapter-grid">
+                <article class="chapter-card" data-chapter="Human Geography: Nature and Scope"><h3>Human Geography</h3><div class="button-group"><a href="https://ncert.nic.in/textbook/pdf/legy101.pdf" target="_blank" class="card-btn view-ncert-btn">NCERT Book (Hindi)</a><button class="card-btn google-search-btn">Search Google</button><button class="card-btn youtube-search-btn">Search YouTube</button><button class="card-btn generate-mcq-btn">Generate MCQ</button></div></article>
+                <article class="chapter-card" data-chapter="The World Population: Distribution, Density and Growth"><h3>The World Population</h3><div class="button-group"><a href="https://ncert.nic.in/textbook/pdf/legy102.pdf" target="_blank" class="card-btn view-ncert-btn">NCERT Book (Hindi)</a><button class="card-btn google-search-btn">Search Google</button><button class="card-btn youtube-search-btn">Search YouTube</button><button class="card-btn generate-mcq-btn">Generate MCQ</button></div></article>
+                <article class="chapter-card" data-chapter="Human Development"><h3>Human Development</h3><div class="button-group"><a href="https://ncert.nic.in/textbook/pdf/legy103.pdf" target="_blank" class="card-btn view-ncert-btn">NCERT Book (Hindi)</a><button class="card-btn google-search-btn">Search Google</button><button class="card-btn youtube-search-btn">Search YouTube</button><button class="card-btn generate-mcq-btn">Generate MCQ</button></div></article>
+                <article class="chapter-card" data-chapter="Primary Activities"><h3>Primary Activities</h3><div class="button-group"><a href="https://ncert.nic.in/textbook/pdf/legy104.pdf" target="_blank" class="card-btn view-ncert-btn">NCERT Book (Hindi)</a><button class="card-btn google-search-btn">Search Google</button><button class="card-btn youtube-search-btn">Search YouTube</button><button class="card-btn generate-mcq-btn">Generate MCQ</button></div></article>
+                <article class="chapter-card" data-chapter="Secondary Activities"><h3>Secondary Activities</h3><div class="button-group"><a href="https://ncert.nic.in/textbook/pdf/legy105.pdf" target="_blank" class="card-btn view-ncert-btn">NCERT Book (Hindi)</a><button class="card-btn google-search-btn">Search Google</button><button class="card-btn youtube-search-btn">Search YouTube</button><button class="card-btn generate-mcq-btn">Generate MCQ</button></div></article>
+            </div>
+
+            <h2 class="chapter-category">Book 2: India - People and Economy (भारत - लोग और अर्थव्यवस्था)</h2>
+            <div class="chapter-grid">
+                <article class="chapter-card" data-chapter="Population: Distribution, Density, Growth and Composition"><h3>Population</h3><div class="button-group"><a href="https://ncert.nic.in/textbook/pdf/legy201.pdf" target="_blank" class="card-btn view-ncert-btn">NCERT Book (Hindi)</a><button class="card-btn google-search-btn">Search Google</button><button class="card-btn youtube-search-btn">Search YouTube</button><button class="card-btn generate-mcq-btn">Generate MCQ</button></div></article>
+                <article class="chapter-card" data-chapter="Human Settlements"><h3>Human Settlements</h3><div class="button-group"><a href="https://ncert.nic.in/textbook/pdf/legy202.pdf" target="_blank" class="card-btn view-ncert-btn">NCERT Book (Hindi)</a><button class="card-btn google-search-btn">Search Google</button><button class="card-btn youtube-search-btn">Search YouTube</button><button class="card-btn generate-mcq-btn">Generate MCQ</button></div></article>
+                <article class="chapter-card" data-chapter="Land Resources and Agriculture"><h3>Land Resources and Agriculture</h3><div class="button-group"><a href="https://ncert.nic.in/textbook/pdf/legy203.pdf" target="_blank" class="card-btn view-ncert-btn">NCERT Book (Hindi)</a><button class="card-btn google-search-btn">Search Google</button><button class="card-btn youtube-search-btn">Search YouTube</button><button class="card-btn generate-mcq-btn">Generate MCQ</button></div></article>
+                <article class="chapter-card" data-chapter="Water Resources"><h3>Water Resources</h3><div class="button-group"><a href="https://ncert.nic.in/textbook/pdf/legy204.pdf" target="_blank" class="card-btn view-ncert-btn">NCERT Book (Hindi)</a><button class="card-btn google-search-btn">Search Google</button><button class="card-btn youtube-search-btn">Search YouTube</button><button class="card-btn generate-mcq-btn">Generate MCQ</button></div></article>
+                <article class="chapter-card" data-chapter="Planning and Sustainable Development in Indian Context"><h3>Planning and Sustainable Development</h3><div class="button-group"><a href="https://ncert.nic.in/textbook/pdf/legy205.pdf" target="_blank" class="card-btn view-ncert-btn">NCERT Book (Hindi)</a><button class="card-btn google-search-btn">Search Google</button><button class="card-btn youtube-search-btn">Search YouTube</button><button class="card-btn generate-mcq-btn">Generate MCQ</button></div></article>
+            </div>
+        </section>
+        
+        <!-- MCQ Display Section -->
+        <section id="mcq-section" style="display:none;">
+            <button id="back-btn" class="back-btn">&larr; Back to Chapters</button>
+            <h2 id="mcq-topic-title"></h2>
+            <div id="mcq-loader" class="loader" style="display:none;"></div>
+            <div id="mcq-container"></div>
+        </section>
+
+        <!-- AI Tutor Section -->
+        <section class="ai-tutor-section">
+            <h2>Paro AI Geography Tutor</h2>
+            <div id="chat-container" class="chat-container"><div class="message ai-tutor-message">Hello! I'm Paro AI. Ask me about human geography, physical features, or environmental topics.</div></div>
+            <div class="chat-input-area"><input type="text" id="user-input" placeholder="Ask anything about Geography..."><button id="send-btn">Send</button></div>
+        </section>
+    </main>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const apiKey = 'AIzaSyBaAvfHfq06XKgj6duX0VATo8y58tEWuWc'; // Replace with your Gemini API key
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${apiKey}`;
+            
+            const mainContentSection = document.getElementById('main-content-section');
+            const mcqSection = document.getElementById('mcq-section');
+            const mcqContainer = document.getElementById('mcq-container');
+            const mcqLoader = document.getElementById('mcq-loader');
+            const backBtn = document.getElementById('back-btn');
+            const mcqTopicTitle = document.getElementById('mcq-topic-title');
+            const chapterSearch = document.getElementById('chapter-search');
+            const themeToggle = document.getElementById('theme-toggle');
+            const body = document.body;
+            const chatContainer = document.getElementById('chat-container');
+            const userInput = document.getElementById('user-input');
+            const sendBtn = document.getElementById('send-btn');
+
+            // --- Theme Toggle ---
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark') { body.classList.add('dark-mode'); themeToggle.textContent = '🌙'; } 
+            else { themeToggle.textContent = '☀️'; }
+            themeToggle.addEventListener('click', () => {
+                body.classList.toggle('dark-mode');
+                const isDarkMode = body.classList.contains('dark-mode');
+                themeToggle.textContent = isDarkMode ? '🌙' : '☀️';
+                localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
+            });
+
+            // --- Search & Button Logic ---
+            chapterSearch.addEventListener('keyup', () => {
+                const query = chapterSearch.value.toLowerCase();
+                document.querySelectorAll('.chapter-card').forEach(card => {
+                    card.style.display = card.dataset.chapter.toLowerCase().includes(query) ? 'flex' : 'none';
+                });
+            });
+
+            document.querySelectorAll('.generate-mcq-btn').forEach(btn => btn.addEventListener('click', e => generateAndDisplayMCQs(e.target.closest('.chapter-card').dataset.chapter)));
+            document.querySelectorAll('.google-search-btn').forEach(btn => btn.addEventListener('click', e => {
+                const query = e.target.closest('.chapter-card').dataset.chapter;
+                window.open(`https://www.google.com/search?q=${encodeURIComponent(query + ' class 12 geography')}`, '_blank');
+            }));
+            document.querySelectorAll('.youtube-search-btn').forEach(btn => btn.addEventListener('click', e => {
+                const query = e.target.closest('.chapter-card').dataset.chapter;
+                window.open(`https://www.youtube.com/results?search_query=${encodeURIComponent(query + ' class 12 geography explanation')}`, '_blank');
+            }));
+            backBtn.addEventListener('click', () => { mainContentSection.style.display = 'block'; mcqSection.style.display = 'none'; });
+            
+            // --- Content Generation & Display ---
+            async function generateAndDisplayMCQs(topic) {
+                mainContentSection.style.display = 'none'; mcqSection.style.display = 'block';
+                mcqTopicTitle.textContent = `MCQs on ${topic}`; mcqContainer.innerHTML = '';
+                mcqLoader.style.display = 'block';
+                const prompt = `Generate 10 multiple-choice questions about the geography topic: "${topic}". Response must be a valid JSON array of objects with "question", "options" (4 strings), and "answer".`;
+                const config = { generationConfig: { response_mime_type: 'application/json' } };
+                const result = await generateContent(prompt, config);
+                mcqLoader.style.display = 'none';
+                if (result.error) { mcqContainer.innerHTML = `<p style="color:red;">${result.error}</p>`; return; }
+                try {
+                    const mcqs = JSON.parse(result.candidates?.[0]?.content?.parts?.[0]?.text);
+                    mcqs.forEach((mcq, i) => {
+                        const qDiv = document.createElement('div'); qDiv.className = 'mcq-question';
+                        qDiv.innerHTML = `<p>${i + 1}. ${mcq.question}</p>`;
+                        const opts = document.createElement('ul'); opts.className = 'mcq-options';
+                        mcq.options.forEach(opt => {
+                            const li = document.createElement('li'); li.textContent = opt;
+                            li.addEventListener('click', () => checkAnswer(li, mcq.answer, opts));
+                            opts.appendChild(li);
+                        });
+                        qDiv.appendChild(opts); mcqContainer.appendChild(qDiv);
+                    });
+                } catch (e) { mcqContainer.innerHTML = `<p style="color:red;">Failed to load MCQs.</p>`; }
+            }
+            
+            function checkAnswer(selected, correctAns, optsList) {
+                optsList.querySelectorAll('li').forEach(li => {
+                    li.style.pointerEvents = 'none';
+                    if (li.textContent === correctAns) li.classList.add('correct');
+                });
+                if (selected.textContent !== correctAns) selected.classList.add('incorrect');
+            }
+            
+            async function handleUserInput() {
+                const userMsg = userInput.value.trim();
+                if (!userMsg) return;
+                displayMessage(userMsg, 'user'); userInput.value = '';
+                showLoading(chatContainer);
+                const prompt = `Act as a Geography tutor. User asked: "${userMsg}". Provide a concise, clear answer for a student. Keep it under 100 words.`;
+                const res = await generateContent(prompt); hideLoading('chat-loader');
+                const text = res?.candidates?.[0]?.content?.parts?.[0]?.text || 'Sorry, I could not get a response.';
+                displayMessage(text.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>'), 'ai');
+            }
+
+            function displayMessage(content, sender) {
+                const div = document.createElement('div');
+                div.classList.add('message', sender === 'user' ? 'user-message' : 'ai-tutor-message');
+                div.innerHTML = content;
+                chatContainer.appendChild(div); chatContainer.scrollTop = chatContainer.scrollHeight;
+            }
+            function showLoading(container) {
+                const div = document.createElement('div'); div.className = 'loader'; div.id = 'chat-loader';
+                container.appendChild(div); container.scrollTop = container.scrollHeight;
+            }
+            function hideLoading(id = 'chat-loader') { document.getElementById(id)?.remove(); }
+            async function generateContent(prompt, config = {}) {
+                try {
+                    const payload = { contents: [{ parts: [{ text: prompt }] }], ...config };
+                    const res = await fetch(apiUrl, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+                    if (!res.ok) throw new Error(`API error: ${res.status}`);
+                    return await res.json();
+                } catch (err) { return { error: 'An error occurred. Please try again.' }; }
+            }
+            sendBtn.addEventListener('click', handleUserInput);
+            userInput.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); handleUserInput(); } });
+        });
+    </script>
+</body>
+</html>
