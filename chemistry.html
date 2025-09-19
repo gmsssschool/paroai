@@ -237,7 +237,7 @@
                 mainContentSection.style.display = 'none'; mcqSection.style.display = 'block';
                 mcqTopicTitle.textContent = `MCQs on ${topic}`; mcqContainer.innerHTML = '';
                 mcqLoader.style.display = 'block';
-                const prompt = `Generate 10 multiple-choice questions about the chemistry topic: "${topic}". Response must be a valid JSON array of objects with "question", "options" (4 strings), and "answer".`;
+                const prompt = `Generate 25 multiple-choice questions about the chemistry topic: "${topic}". Response must be a valid JSON array of objects with "question", "options" (4 strings), and "answer".`;
                 const config = { generationConfig: { response_mime_type: 'application/json' } };
                 const result = await generateContent(prompt, config);
                 mcqLoader.style.display = 'none';
